@@ -1,48 +1,43 @@
-doctype html
-html
-    head
-        title= title
-    body
-        div.container
-            h1= title
+extends layout
+
+block content
+    .row.mt-4
+        .col-md-12
+            h1.mb-4= title
             if cart.length === 0
-                p Your cart is empty.
+                .alert.alert-info Your cart is empty.
+                a.btn.btn-primary(href='/') Continue Shopping
             else
-                ul.list-group
-                    each item in cart
-                        li.list-group-item
-                            h2= item.name
-                            p.card-text= item.description
-                            p.card-text= `Price: $${item.price}`
-                            p.card-text= `Category: ${item.category}`
-                            img.card-img-top(src=item.image, alt=item.name)
+                .table-responsive
+                    table.table.table-hover.align-middle
+                        thead.table-light
+                            tr
+                                th Product
+                                th Price
+                                th Quantity
+                                th Subtotal
+                                th Actions
+                        tbody
+                            each item in cart
+                                tr
+                                    td
+                                        .d-flex.align-items-center
+                                            img.me-3(src=item.image, alt=item.name, style="width: 50px; height: 50px; object-fit: cover;")
+                                            div
+                                                h6.mb-0= item.name
+                                                small.text-muted= item.category
+                                    td= `$${item.price}`
+                                    td
+                                        form(action=`/cart/update/${item._id}`, method='post', style="width: 100px;")
+                                            input.form-control(type='number', name='quantity', value=item.quantity, min='1', max='10', onchange='this.form.submit()')
+                                    td= `$${(item.price * item.quantity).toFixed(2)}`
+                                    td
+                                        form(action=`/cart/remove/${item._id}`, method='post')
+                                            button.btn.btn-outline-danger.btn-sm(type='submit') Remove
 
-                            // Quantity selector for each item
-                        form(action=`/cart/update/${item._id}`, method='post')
-                            label(for=`quantity-${item._id}`) Quantity:
-                            input(type='number', id=`quantity-${item._id}`, name='quantity', value=item.quantity, min='1', max='10', onchange='this.form.submit()')
-                            button.btn.btn-danger(type='submit', formaction=`/cart/remove/${item._id}`) Remove from Cart
-
-
-                // Calculate the total price
                 - let totalPrice = cart.reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0);
-
-                h2 Total Price: $#{totalPrice.toFixed(2)}
-
-        p
-            a.btn.btn-success(href='/') Continue shopping
-
-        // Script section to handle quantity changes and update total price
-        script.
-            function updateTotalPrice() {
-                const quantityInputs = document.querySelectorAll('input[name="quantity"]');
-                let totalPrice = 0;
-                quantityInputs.forEach((input, index) => {
-                    const itemPrice = parseFloat(cart[index].price);
-                    const itemQuantity = parseInt(input.value);
-                    if (!isNaN(itemPrice) && !isNaN(itemQuantity)) {
-                        totalPrice += itemPrice * itemQuantity;
-                    }
-                });
-                document.getElementById('totalPrice').textContent = 'Total Price: $' + totalPrice.toFixed(2);
-            }
+                .d-flex.justify-content-between.align-items-center.mt-4
+                    h3 Total Price: $#{totalPrice.toFixed(2)}
+                    .btn-group
+                        a.btn.btn-outline-secondary(href='/') Continue Shopping
+                        button.btn.btn-success Checkout

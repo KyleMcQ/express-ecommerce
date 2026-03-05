@@ -1,0 +1,27 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        title= title || 'E-Commerce Store'
+        link(rel="stylesheet" href="/bootstrap.min.css")
+        style.
+            .navbar { margin-bottom: 20px; }
+            .product-image { max-height: 300px; object-fit: contain; }
+    body
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+            .container
+                a.navbar-brand(href="/") E-Store
+                button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav")
+                    span.navbar-toggler-icon
+                #navbarNav.collapse.navbar-collapse
+                    ul.navbar-nav.ms-auto
+                        li.nav-item
+                            a.nav-link(href="/") Products
+                        li.nav-item
+                            a.nav-link(href="/cart") Cart
+
+        .container
+            block content
+
+        script(src="/bootstrap.min.js")

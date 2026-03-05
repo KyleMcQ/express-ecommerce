@@ -1,31 +1,28 @@
-doctype html
-html
-    head
-        title= title
-        div
+extends layout
 
-    body
-        div.container
-            h1= title
-            a.btn.btn-success(href='/cart') View Cart
-            ul.list-group
-                each item in clothingItems
-                    li.list-group-item
-                        h2= item.name
-                        p.card-text= item.description
-                        p.card-text= `Price: $${item.price}`
-                        p.card-text= `Category: ${item.category}`
-                        img.card-img-top(src=item.image, alt=item.name)
-                        div
-                        // View item details link
-                        a.btn.btn-primary(href=`/clothing/${item._id}`) View Details
-
-
-                        // Quantity selector and Add to Cart form
-                        form(action='/cart/add', method='post')
-                            input(type='hidden', name='id', value=item._id)
-                            label(for=`quantity-${item._id}`) Quantity:
-                            button.btn.btn-success(type='submit') Add to Cart
-
-        p
-            a.btn.btn-success(href='/cart') View Cart
+block content
+    .row.mt-4
+        .col-md-12
+            h1.mb-4= title
+            if clothingItems.length === 0
+                .alert.alert-info No products found.
+            else
+                .row.row-cols-1.row-cols-md-3.g-4
+                    each item in clothingItems
+                        .col
+                            .card.h-100
+                                img.card-img-top.product-image(src=item.image, alt=item.name)
+                                .card-body
+                                    h5.card-title= item.name
+                                    p.card-text.text-muted= item.category
+                                    p.card-text= item.description
+                                    p.card-text.fw-bold= `Price: $${item.price}`
+                                .card-footer.bg-transparent.border-top-0
+                                    .d-grid.gap-2
+                                        a.btn.btn-outline-primary(href=`/clothing/${item._id}`) View Details
+                                        form(action='/cart/add', method='post')
+                                            input(type='hidden', name='id', value=item._id)
+                                            .input-group.mb-2
+                                                span.input-group-text Qty
+                                                input.form-control(type='number', name='quantity', value='1', min='1', max='10')
+                                            button.btn.btn-success.w-100(type='submit') Add to Cart

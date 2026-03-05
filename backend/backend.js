@@ -5,18 +5,19 @@ const mongoose = require('mongoose');
 const productRoutes = require('./routes/products');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ecommerce';
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cors());
 
-mongoose.connect('mongodb://127.0.0.1:27017/ecommerce', {
+mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
 
 mongoose.connection.on('connected', () => {
-    console.log('Connected to mongodb database @ 27017');
+    console.log(`Connected to mongodb database at ${MONGODB_URI}`);
 });
 
 app.use('/api', productRoutes);
