@@ -1,21 +1,27 @@
-doctype html
-html
-    head
-        title= title
-    body
-        div.container
+extends layout
+
+block content
+    .row.mt-4
+        .col-md-6
+            img.img-fluid.rounded.product-image(src=clothingItem.image, alt=clothingItem.name)
+        .col-md-6
+            nav(aria-label="breadcrumb")
+                ol.breadcrumb
+                    li.breadcrumb-item: a(href="/") Home
+                    li.breadcrumb-item.active(aria-current="page")= clothingItem.name
+
             h1= clothingItem.name
-            p.card-text= clothingItem.description
-            p.card-text= `Price: $${clothingItem.price}`
-            p.card-text= `Category: ${clothingItem.category}`
-            img.card-img-top(src=clothingItem.image, alt=clothingItem.name)
+            p.text-muted.h5= clothingItem.category
+            hr
+            p.lead= clothingItem.description
+            h3.text-primary.mb-4= `Price: $${clothingItem.price}`
 
-        // Quantity selector and Add to Cart form
-        form(action='/cart/add', method='post')
-            input(type='hidden', name='id', value=clothingItem._id)
-            label(for='quantity') Quantity:
-            input(type='number', id='quantity', name='quantity', value='1', min='1', max='10')
-            button.btn.btn-success(type='submit') Add to Cart
+            form(action='/cart/add', method='post', style="max-width: 300px;")
+                input(type='hidden', name='id', value=clothingItem._id)
+                .mb-3
+                    label.form-label(for='quantity') Quantity:
+                    input.form-control(type='number', id='quantity', name='quantity', value='1', min='1', max='10')
+                button.btn.btn-success.btn-lg.w-100(type='submit') Add to Cart
 
-        p
-            a.btn.btn-success(href='/') Continue shopping
+            .mt-4
+                a.btn.btn-link.ps-0(href='/') ← Back to products
